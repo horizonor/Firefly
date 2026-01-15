@@ -7,33 +7,27 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "Taka",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: "little fox",
 
 	// 站点 URL
-	site_url: "https://firefly.cuteleaf.cn",
+	site_url: "https://blog.takalos.me/",
 
 	// 站点描述
 	description:
-		"Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"塔卡是虚荣中的一只小狐狸",
 
 	// 站点关键词
 	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
 		"博客",
-		"技术博客",
-		"静态博客",
 	],
 
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: 173,
 		// 是否对访问者隐藏主题色选择器
 		fixed: false,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
@@ -67,11 +61,11 @@ export const siteConfig: SiteConfig = {
 		// { type: "image", value: "https://example.com/logo.png", alt: "Firefly Logo" }
 		logo: {
 			type: "image",
-			value: "/assets/images/firefly.png",
-			alt: "🍀",
+			value: "/assets/images/my.png",
+			alt: "Firefly Logo",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "Taka",
 		// 全宽导航栏，导航栏是否占满屏幕宽度，true：占满，false：不占满
 		widthFull: false,
 		// 导航栏图标和标题是否跟随主题色
@@ -79,7 +73,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01",
+	siteStartDate: "2026-01-15",
 
 	// 提醒框（Admonitions）配置，修改后需要重启开发服务器才能生效
 	// 主题：'github' | 'obsidian' | 'vitepress'，每个主题风格和语法不同，可根据喜好选择
@@ -102,7 +96,7 @@ export const siteConfig: SiteConfig = {
 	// bangumi配置
 	bangumi: {
 		// Bangumi用户ID
-		userId: "1163581",
+		userId: "",
 	},
 
 	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404
@@ -113,7 +107,7 @@ export const siteConfig: SiteConfig = {
 		// 留言板页面开关，需要配置评论系统
 		guestbook: true,
 		// 番组计划页面开关，含追番、游戏、书籍和音乐，dev调试时只获取一页数据，build才会获取全部数据
-		bangumi: true,
+		bangumi: false,
 	},
 
 	// 文章列表布局配置
@@ -125,11 +119,11 @@ export const siteConfig: SiteConfig = {
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
 		grid: {
 			// 是否开启瀑布流布局，同时有封面图和无封面图的混合文章推荐开启
-			masonry: false,
+			masonry: true,
 			// 网格模式列数：2 或 3
 			// 2列是默认模式，在任何侧边栏配置下均可生效
 			// 3列模式仅在单侧边栏（或无侧边栏）时生效，
-			columns: 3,
+			columns: 2,
 		},
 	},
 
