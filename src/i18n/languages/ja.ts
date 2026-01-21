@@ -245,4 +245,10 @@ export const ja: Translation = {
 	[Key.copyLink]: "リンクをコピー",
 	[Key.savePoster]: "ポスターを保存",
 	[Key.scanToRead]: "QRコードで読む",
+
+	// ライフバッテリーコンポーネント
+	[Key.lifeBattery]: "生命のバッテリー",
+	[Key.lifeBatteryYearsOld]: "{age} 歳",
+	[Key.lifeBatteryRemaining]: "残り {percent}%",
+	[Key.lifeBatteryElapsed]: "経過 {percent}%",
 };

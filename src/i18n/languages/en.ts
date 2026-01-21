@@ -246,4 +246,10 @@ export const en: Translation = {
 	[Key.copyLink]: "Copy Link",
 	[Key.savePoster]: "Save Poster",
 	[Key.scanToRead]: "Scan to Read",
+
+	// Life Battery Component
+	[Key.lifeBattery]: "Life Battery",
+	[Key.lifeBatteryYearsOld]: "{age} years old",
+	[Key.lifeBatteryRemaining]: "{percent}% remaining",
+	[Key.lifeBatteryElapsed]: "{percent}% elapsed",
 };

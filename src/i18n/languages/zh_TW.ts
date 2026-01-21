@@ -239,4 +239,10 @@ export const zh_TW: Translation = {
 	[Key.copyLink]: "複製連結",
 	[Key.savePoster]: "保存海報",
 	[Key.scanToRead]: "掃碼閱讀文章",
+
+	// 生命電量組件
+	[Key.lifeBattery]: "剩餘電量",
+	[Key.lifeBatteryYearsOld]: "{age} 歲",
+	[Key.lifeBatteryRemaining]: "剩餘 {percent}%",
+	[Key.lifeBatteryElapsed]: "已度過 {percent}%",
 };

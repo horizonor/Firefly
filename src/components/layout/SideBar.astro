@@ -4,6 +4,7 @@ import Advertisement from "@/components/widget/Advertisement.astro";
 import Announcement from "@/components/widget/Announcement.astro";
 import Calendar from "@/components/widget/Calendar.astro";
 import Categories from "@/components/widget/Categories.astro";
+import LifeBattery from "@/components/widget/LifeBattery.astro";
 import Profile from "@/components/widget/Profile.astro";
 import SidebarTOC from "@/components/widget/SidebarTOC.astro";
 import SiteStats from "@/components/widget/SiteStats.astro";
@@ -41,6 +42,7 @@ const componentTypeToId = {
 	announcement: "announcement",
 	categories: "categories",
 	tags: "tags",
+	lifeBattery: "life-battery",
 	advertisement: "advertisement",
 };
 
@@ -82,6 +84,7 @@ const componentMap = {
 	announcement: Announcement,
 	categories: Categories,
 	tags: Tags,
+	lifeBattery: LifeBattery,
 	sidebarToc: SidebarTOC,
 	advertisement: Advertisement,
 	stats: SiteStats,

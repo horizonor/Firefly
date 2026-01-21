@@ -1,12 +1,12 @@
 ---
 title: "Java基础36讲"
 source: "https://learn.lianglianglee.com/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/Java%E5%9F%BA%E7%A1%8036%E8%AE%B2.md"
-author:
-published:
+author: "极客时间"
+published: 2026-01-19T00:00:00Z
 created: 2026-01-19
 description: "Java基础36讲"
-tags:
-  - "clippings"
+tags: [clippings]
+draft: true
 ---
 [邀请您使用Qoder，体验AI Coding](https://qoder.com/referral?referral_code=7R6tVmFnUpov6HHFMeQCao4fTmhRzFXa)
 

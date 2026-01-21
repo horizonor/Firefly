@@ -231,6 +231,12 @@ enum I18nKey {
 	copyLink = "copyLink",
 	savePoster = "savePoster",
 	scanToRead = "scanToRead",
+
+	// 生命电量组件
+	lifeBattery = "lifeBattery",
+	lifeBatteryYearsOld = "lifeBatteryYearsOld",
+	lifeBatteryRemaining = "lifeBatteryRemaining",
+	lifeBatteryElapsed = "lifeBatteryElapsed",
 }
 
 export default I18nKey;

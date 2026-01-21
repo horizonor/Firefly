@@ -247,4 +247,10 @@ export const ru: Translation = {
 	[Key.copyLink]: "Копировать ссылку",
 	[Key.savePoster]: "Сохранить постер",
 	[Key.scanToRead]: "Сканируйте, чтобы прочитать",
+
+	// Компонент батареи жизни
+	[Key.lifeBattery]: "Заряд жизни",
+	[Key.lifeBatteryYearsOld]: "{age} лет",
+	[Key.lifeBatteryRemaining]: "Осталось {percent}%",
+	[Key.lifeBatteryElapsed]: "Прошло {percent}%",
 };

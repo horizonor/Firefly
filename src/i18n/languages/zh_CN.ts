@@ -237,4 +237,10 @@ export const zh_CN: Translation = {
 	[Key.copyLink]: "复制链接",
 	[Key.savePoster]: "保存海报",
 	[Key.scanToRead]: "扫码阅读文章",
+
+	// 生命电量组件
+	[Key.lifeBattery]: "剩余电量",
+	[Key.lifeBatteryYearsOld]: "{age} 岁",
+	[Key.lifeBatteryRemaining]: "剩余 {percent}%",
+	[Key.lifeBatteryElapsed]: "已度过 {percent}%",
 };

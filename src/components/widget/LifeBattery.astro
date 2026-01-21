@@ -1,0 +1,177 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const { class: className, style } = Astro.props;
+
+// 生日配置
+const birthDate = new Date("2001-11-01");
+const lifeExpectancy = 70; // 预期寿命
+
+// 计算当前年龄和生命进度
+const now = new Date();
+const ageInMs = now.getTime() - birthDate.getTime();
+const ageInYears = ageInMs / (1000 * 60 * 60 * 24 * 365.25);
+
+// 计算到70岁的总时长
+const totalLifeMs = lifeExpectancy * 365.25 * 24 * 60 * 60 * 1000;
+
+// 计算已度过的百分比
+const elapsedPercent = (ageInMs / totalLifeMs) * 100;
+const remainingPercent = 100 - elapsedPercent;
+
+// 格式化数字（保留1位小数）
+const formatPercent = (num: number): string => {
+	return num.toFixed(1);
+};
+
+// 根据剩余百分比确定电池颜色
+const getBatteryColor = (percent: number): string => {
+	if (percent > 50) return "text-green-500 dark:text-green-400";
+	if (percent > 20) return "text-yellow-500 dark:text-yellow-400";
+	return "text-red-500 dark:text-red-400";
+};
+
+const batteryColor = getBatteryColor(remainingPercent);
+---
+
+<WidgetLayout name={i18n(I18nKey.lifeBattery)} id="life-battery" class={className} style={style}>
+	<div class="flex flex-col gap-3 px-1">
+		<!-- 电池图标和百分比显示 -->
+		<div class="flex items-center justify-center gap-3 py-2">
+			<div class={`text-5xl ${batteryColor} transition-colors duration-300`}>
+				<Icon name="material-symbols:battery-charging-full-rounded" />
+			</div>
+			<div class="flex flex-col items-start">
+				<span class={`text-3xl font-bold ${batteryColor} transition-colors duration-300`} id="battery-percent">
+					{formatPercent(remainingPercent)}%
+				</span>
+				<span class="text-xs text-neutral-500 dark:text-neutral-400" id="age-display">
+					{i18n(I18nKey.lifeBatteryYearsOld).replace("{age}", Math.floor(ageInYears).toString())}
+				</span>
+			</div>
+		</div>
+
+		<!-- 进度条 -->
+		<div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-3 overflow-hidden">
+			<div
+				class={`h-full ${batteryColor.replace('text-', 'bg-')} transition-all duration-500 rounded-full`}
+				style={`width: ${remainingPercent}%`}
+				id="battery-bar"
+			></div>
+		</div>
+
+		<!-- 详细信息 -->
+		<div class="flex flex-col gap-1.5 text-xs">
+			<div class="flex items-center justify-between px-2">
+				<span class="text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+					<Icon name="material-symbols:timelapse" class="text-base" />
+					{i18n(I18nKey.lifeBatteryElapsed).split(' ')[0]}
+				</span>
+				<span class="font-semibold text-neutral-800 dark:text-neutral-200" id="elapsed-percent">
+					{formatPercent(elapsedPercent)}%
+				</span>
+			</div>
+			<div class="flex items-center justify-between px-2">
+				<span class="text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+					<Icon name="material-symbols:hourglass-bottom" class="text-base" />
+					{i18n(I18nKey.lifeBatteryRemaining).split(' ')[0]}
+				</span>
+				<span class={`font-semibold ${batteryColor} transition-colors duration-300`} id="remaining-percent">
+					{formatPercent(remainingPercent)}%
+				</span>
+			</div>
+		</div>
+	</div>
+</WidgetLayout>
+
+<script is:inline define:vars={{ birthDate: birthDate.toISOString(), lifeExpectancy }}>
+	function updateLifeBattery() {
+		const birth = new Date(birthDate);
+		const now = new Date();
+		const ageInMs = now.getTime() - birth.getTime();
+		const ageInYears = ageInMs / (1000 * 60 * 60 * 24 * 365.25);
+
+		const totalLifeMs = lifeExpectancy * 365.25 * 24 * 60 * 60 * 1000;
+		const elapsedPercent = (ageInMs / totalLifeMs) * 100;
+		const remainingPercent = 100 - elapsedPercent;
+
+		const formatPercent = (num) => num.toFixed(1);
+
+		// 更新显示
+		const batteryPercentEl = document.getElementById("battery-percent");
+		const ageDisplayEl = document.getElementById("age-display");
+		const elapsedPercentEl = document.getElementById("elapsed-percent");
+		const remainingPercentEl = document.getElementById("remaining-percent");
+		const batteryBar = document.getElementById("battery-bar");
+
+		if (batteryPercentEl) {
+			batteryPercentEl.textContent = formatPercent(remainingPercent) + "%";
+		}
+
+		if (ageDisplayEl) {
+			// 这里需要根据当前语言获取翻译，简化起见直接显示年龄
+			const age = Math.floor(ageInYears);
+			// 保持原有翻译格式
+			const originalText = ageDisplayEl.textContent || "";
+			ageDisplayEl.textContent = originalText.replace(/\d+/, age.toString());
+		}
+
+		if (elapsedPercentEl) {
+			elapsedPercentEl.textContent = formatPercent(elapsedPercent) + "%";
+		}
+
+		if (remainingPercentEl) {
+			remainingPercentEl.textContent = formatPercent(remainingPercent) + "%";
+		}
+
+		if (batteryBar) {
+			batteryBar.style.width = remainingPercent + "%";
+		}
+
+		// 更新颜色
+		const getBatteryColorClass = (percent) => {
+			if (percent > 50) return "green";
+			if (percent > 20) return "yellow";
+			return "red";
+		};
+
+		const colorClass = getBatteryColorClass(remainingPercent);
+		const textColorClass = `text-${colorClass}-500 dark:text-${colorClass}-400`;
+		const bgColorClass = `bg-${colorClass}-500 dark:bg-${colorClass}-400`;
+
+		[batteryPercentEl, remainingPercentEl].forEach(el => {
+			if (el) {
+				el.className = el.className.replace(
+					/text-(green|yellow|red)-\d+\s+dark:text-(green|yellow|red)-\d+/g,
+					textColorClass
+				);
+			}
+		});
+
+		if (batteryBar) {
+			batteryBar.className = batteryBar.className.replace(
+				/bg-(green|yellow|red)-\d+\s+dark:bg-(green|yellow|red)-\d+/g,
+				bgColorClass
+			);
+		}
+	}
+
+	// 页面加载时更新
+	updateLifeBattery();
+
+	// 每小时更新一次
+	setInterval(updateLifeBattery, 60 * 60 * 1000);
+
+	// 页面切换时重新更新（Swup路由切换）
+	document.addEventListener("swup:contentReplaced", () => {
+		setTimeout(updateLifeBattery, 100);
+	});
+</script>

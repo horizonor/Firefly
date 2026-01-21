@@ -1,13 +1,11 @@
 ---
 title: "Java基础面试题"
 source: "https://www.xiaolincoding.com/interview/java.html#%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1%E6%98%AF%E4%BB%80%E4%B9%88"
-author:
-  - "[[小林coding]]"
-published: undefined
+author: "小林coding"
+published: 2026-01-21T00:00:00Z
 created: 2026-01-21
 description: "全面的Java基础面试题汇总，涵盖Java核心概念、面向对象编程、JVM原理、集合框架、多线程并发、异常处理、IO流、反射、注解、泛型、Lambda表达式、Stream API以及Java新特性等核心知识点。适合Java开发者面试准备和技术复习。"
-tags:
-  - "clippings"
+tags: [clippings]
 ---
 [![](https://cdn.xiaolincoding.com/niumianhaibao.png)](https://www.niumianoffer.com/?ref=tswekk4d)
 
