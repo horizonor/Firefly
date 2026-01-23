@@ -1,0 +1,304 @@
+---
+// 几何萤火虫效果组件
+---
+
+<canvas id="fireflies-canvas"></canvas>
+
+<style is:global>
+  #fireflies-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+
+<script>
+  class Firefly {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    color: { r: number; g: number; b: number };
+    size: number;
+    trail: { x: number; y: number; alpha: number }[] = [];
+    maxTrailLength: number = 15;
+
+    constructor(x: number, y: number, color: { r: number; g: number; b: number }) {
+      this.x = x;
+      this.y = y;
+      // 初始随机速度
+      this.vx = (Math.random() - 0.5) * 3;
+      this.vy = (Math.random() - 0.5) * 3;
+      this.color = color;
+      this.size = 4 + Math.random() * 4; // 4-8px
+    }
+
+    update(mouseX: number, mouseY: number, width: number, height: number) {
+      // 随机游离力 - 让萤火虫持续随机飘动
+      this.vx += (Math.random() - 0.5) * 0.3;
+      this.vy += (Math.random() - 0.5) * 0.3;
+
+      // 计算到鼠标的距离
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // 鼠标引力 - 范围更大，力度温和
+      const maxDistance = 500;
+      const minDistance = 30;
+
+      if (distance > minDistance && distance < maxDistance) {
+        const force = (1 - distance / maxDistance) * 0.15;
+        this.vx += (dx / distance) * force;
+        this.vy += (dy / distance) * force;
+      }
+
+      // 极小的阻力，保持运动
+      this.vx *= 0.985;
+      this.vy *= 0.985;
+
+      // 限制速度
+      const maxSpeed = 5;
+      const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      if (speed > maxSpeed) {
+        this.vx = (this.vx / speed) * maxSpeed;
+        this.vy = (this.vy / speed) * maxSpeed;
+      }
+
+      // 保存当前位置到拖尾
+      this.trail.push({
+        x: this.x,
+        y: this.y,
+        alpha: 1,
+      });
+
+      // 限制拖尾长度
+      if (this.trail.length > this.maxTrailLength) {
+        this.trail.shift();
+      }
+
+      // 更新拖尾透明度
+      this.trail.forEach((point, index) => {
+        point.alpha = index / this.trail.length;
+      });
+
+      // 更新位置
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // 边界处理 - 穿越到对面
+      if (this.x < 0) this.x = width;
+      if (this.x > width) this.x = 0;
+      if (this.y < 0) this.y = height;
+      if (this.y > height) this.y = 0;
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+      const { r, g, b } = this.color;
+
+      // 绘制拖尾 - 发光效果
+      for (let i = 0; i < this.trail.length; i++) {
+        const point = this.trail[i];
+        const size = this.size * (point.alpha * 0.8);
+        const alpha = point.alpha * 0.6;
+
+        // 外发光
+        const glowGradient = ctx.createRadialGradient(
+          point.x,
+          point.y,
+          0,
+          point.x,
+          point.y,
+          size * 3
+        );
+        glowGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.8})`);
+        glowGradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${alpha * 0.3})`);
+        glowGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        ctx.fillStyle = glowGradient;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, size * 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 核心
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 绘制萤火虫主体
+      // 最外层发光
+      const outerGlow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
+      outerGlow.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.8)`);
+      outerGlow.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, 0.4)`);
+      outerGlow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 中层发光
+      const midGlow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
+      midGlow.addColorStop(0, `rgba(255, 255, 255, 0.9)`);
+      midGlow.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, 0.8)`);
+      midGlow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.2)`);
+
+      ctx.fillStyle = midGlow;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 核心 - 白色亮点
+      const coreGradient = ctx.createRadialGradient(
+        this.x,
+        this.y,
+        0,
+        this.x,
+        this.y,
+        this.size
+      );
+      coreGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      coreGradient.addColorStop(0.5, `rgba(${Math.min(r + 50, 255)}, ${Math.min(g + 50, 255)}, ${Math.min(b + 50, 255)}, 0.9)`);
+      coreGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.8)`);
+
+      ctx.fillStyle = coreGradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  class FireflySystem {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    fireflies: Firefly[] = [];
+    mouseX: number = 0;
+    mouseY: number = 0;
+    animationId: number | null = null;
+    isDarkMode: boolean = true;
+
+    constructor(canvas: HTMLCanvasElement) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext("2d", { alpha: true })!;
+
+      this.updateTheme();
+      this.resize();
+      this.init();
+      this.bindEvents();
+      this.animate();
+    }
+
+    updateTheme() {
+      // 检测当前主题
+      this.isDarkMode = document.documentElement.classList.contains('dark');
+    }
+
+    resize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+
+    init() {
+      // 创建多个萤火虫，使用不同颜色
+      const colors = [
+        { r: 255, g: 107, b: 157 }, // 粉色
+        { r: 78, g: 205, b: 196 },  // 青色
+        { r: 167, g: 139, b: 250 }, // 紫色
+        { r: 255, g: 160, b: 122 }, // 橙色
+        { r: 152, g: 216, b: 200 }, // 薄荷绿
+        { r: 255, g: 215, b: 0 },   // 金黄色
+        { r: 135, g: 206, b: 250 }, // 天蓝色
+        { r: 255, g: 182, b: 193 }, // 浅粉色
+      ];
+
+      // 创建15个萤火虫
+      for (let i = 0; i < 15; i++) {
+        const x = Math.random() * this.canvas.width;
+        const y = Math.random() * this.canvas.height;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        this.fireflies.push(new Firefly(x, y, color));
+      }
+    }
+
+    bindEvents() {
+      document.addEventListener("mousemove", (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+      });
+
+      window.addEventListener("resize", () => {
+        this.resize();
+      });
+
+      // 监听主题变化 - 使用MutationObserver
+      const themeObserver = new MutationObserver(() => {
+        this.updateTheme();
+      });
+
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+
+    animate() {
+      // 根据主题使用不同的背景色
+      // 暗色模式：半透明黑色
+      // 亮色模式：半透明白色
+      if (this.isDarkMode) {
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      } else {
+        this.ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      }
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      // 更新并绘制所有萤火虫
+      this.fireflies.forEach((firefly) => {
+        firefly.update(this.mouseX, this.mouseY, this.canvas.width, this.canvas.height);
+        firefly.draw(this.ctx);
+      });
+
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+
+    destroy() {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      this.fireflies = [];
+    }
+  }
+
+  // 初始化萤火虫系统
+  let fireflySystem: FireflySystem | null = null;
+
+  function initFireflySystem() {
+    const canvas = document.getElementById("fireflies-canvas") as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (fireflySystem) {
+      fireflySystem.destroy();
+    }
+    fireflySystem = new FireflySystem(canvas);
+  }
+
+  // 页面加载时初始化
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFireflySystem);
+  } else {
+    initFireflySystem();
+  }
+
+  // 支持 Swup 页面转换
+  if (window?.swup?.hooks) {
+    window.swup.hooks.on("page:view", () => {
+      initFireflySystem();
+    });
+  }
+</script>
