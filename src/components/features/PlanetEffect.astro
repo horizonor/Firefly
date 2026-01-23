@@ -248,15 +248,8 @@
     }
 
     animate() {
-      // 根据主题使用不同的背景色
-      // 暗色模式：半透明黑色
-      // 亮色模式：半透明白色
-      if (this.isDarkMode) {
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      } else {
-        this.ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
-      }
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      // 完全清除画布 - 无拖尾效果
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       // 更新并绘制所有萤火虫
       this.fireflies.forEach((firefly) => {
